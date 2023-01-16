@@ -19,9 +19,9 @@ function fetchIssues(){
         let subject = issues[i].subject
         let description = issues[i].description
         let severity= issues[i].severity
-        let assigned = issues[i].assignedTo
+        let assignedTo = issues[i].assignedTo
         let status = issues[i].status
-        let statusColor = status == 'Closed' ? 'label-succes': 'label-info'
+        let statusColor = status == 'Closed' ? 'label-success': 'label-info'
         //do this with template literals
         issuesList.innerHTML +=
         // "<div class = 'well'>" +
@@ -36,6 +36,9 @@ function fetchIssues(){
         <p><span class = 'label ${statusColor}'>${status}</span></p>
         <h3>${subject}</h3>
         <p>${description}</p>
+        <p><span class='glyphicon glyphicon-time'></span> ${severity} <span class='glyphicon glyphicon-user'></span>`+`  `+ `${ assignedTo}</p>
+        <a href='#' class = 'btn btn-warning' onclick = 'setStatusClosed("${id}")'>Close</a>
+        <a href='#' class = 'btn btn-danger' onclick = 'deleteIssue("${id}")'>Delete</a>
         </div>
         `
     }   
@@ -57,7 +60,7 @@ function saveIssue(){
         subject: issueSubject,
         description: issueDesc,
         severity: issueSeverity,
-        assigned: issueAssignedTo,
+        assignedTo: issueAssignedTo,
         status: issuesStatus
     }
 
@@ -80,3 +83,27 @@ function saveIssue(){
     e.preventDefault() //this is for the submit button, usually the submit button saves things to backend server, this is to stop that behaviour in case we are using local storage
 }
 
+function setStatusClosed(id){
+    let issues = JSON.parse(localStorage.getItem('issues')) //this gets the list of items
+    for(let i=0; i < issues.length; i++){
+        if(issues[i].id ===id){ //***figure out how the loop interacts with the button
+            issues[i].status ='Closed'
+        }
+    }
+    localStorage.setItem('issues', JSON.stringify(issues)) //repackage to array in LS
+
+    fetchIssues()
+}
+
+function deleteIssue(id){
+    let issues = JSON.parse(localStorage.getItem('issues'))
+
+    for(let i = 0; i < issues.length; i++){
+        if(issues[i].id === id){
+            issues.splice(i,1) //** figure out what's going on in here */
+        }
+    }
+    localStorage.setItem('issues', JSON.stringify(issues))
+
+    fetchIssues()
+}
