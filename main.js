@@ -7,8 +7,9 @@ document.getElementById('issueInputForm').addEventListener('submit', saveIssue)
 
 //grabs issues from storage...controller-->mongoDB..OR local storage and plop them on the dom
 function fetchIssues(){
-    let issues = JSON.parse.localStorage.getItem('Issues')
+    let issues = JSON.parse(localStorage.getItem('issues'))
     let issuesList = document.getElementById('issuesList')
+    console.log(issues)
 
     issuesList.innerHTML = ''
 
@@ -21,8 +22,22 @@ function fetchIssues(){
         let assigned = issues[i].assignedTo
         let status = issues[i].status
         let statusColor = status == 'Closed' ? 'label-succes': 'label-info'
+        //do this with template literals
+        issuesList.innerHTML +=
+        // "<div class = 'well'>" +
+        // "<h6>Issue ID:" + id + "</h6>"+
+        // "<p><span class = 'label " + statusColor + "'>" + status + "</span></p>"+
+        // "<h3>"+ subject + "</h3>"+
+        // "<p>" + description + "</p>" + 
+        // "</div>"
 
-        //issuesList.innerHTML +=
+        `<div class = 'well'>
+        <h6>Issue ID:${id}</h6>
+        <p><span class = 'label ${statusColor}'>${status}</span></p>
+        <h3>${subject}</h3>
+        <p>${description}</p>
+        </div>
+        `
     }   
 }
 
